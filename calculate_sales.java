@@ -2,6 +2,10 @@ import java.io.*;
 
 class calculate_sales{
     public static void main(String args[]){
+
+        while(args[i]!=null){
+
+        }
         File file = new File(args[0]);
         File file2 = new File(args[1]);
         try{
