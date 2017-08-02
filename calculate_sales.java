@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class calculate_sales{
     public static void main(String args[]){
@@ -17,13 +19,29 @@ class calculate_sales{
 
                 String str = null;
 
+                    Map<Integer,String> branch = new HashMap<Integer,String>();
+                    Map<String,String> commodity = new HashMap<String,String>();
+
                 while((str=br.readLine())!=null){
-                    System.out.println(str);
+                    String[] strAry = str.split(",");
+                    Integer num = Integer.parseInt(strAry[0]);
+                    branch.put(num,strAry[1]);
+                }
+                System.out.println("支店定義ファイルを読み込みました");
+
+                for(Map.Entry<Integer,String> e : branch.entrySet()){
+                    System.out.println(e.getKey()+":"+e.getValue());
                 }
 
-                BufferedReader br2 = new BufferedReader(new FileReader(file2));
-                while((str=br2.readLine())!=null){
-                    System.out.println(str);
+                br = new BufferedReader(new FileReader(file2));
+                while((str=br.readLine())!=null){
+                    String[] strAry = str.split(",");
+                    commodity.put(strAry[0],strAry[1]);
+                }
+                System.out.println("商品定義ファイルを読み込みました");
+
+                for(Map.Entry<String,String> e : commodity.entrySet()){
+                    System.out.println(e.getKey()+":"+e.getValue());
                 }
 
                 br.close();
