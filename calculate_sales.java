@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 class calculate_sales{
     public static void main(String args[]){
@@ -26,6 +28,16 @@ class calculate_sales{
                     String[] strAry = str.split(",");
                     Integer num = Integer.parseInt(strAry[0]);
                     branch.put(num,strAry[1]);
+
+                    String regex = "\\d\\d\\d";
+
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(strAry[0]);
+
+                    if(!m.find()){
+                        System.out.println("支店定義ファイルのフォーマットが不正です");
+                        System.exit(0);
+                    }
                 }
                 System.out.println("支店定義ファイルを読み込みました");
 
@@ -37,6 +49,16 @@ class calculate_sales{
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
                     commodity.put(strAry[0],strAry[1]);
+
+                    String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
+
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(strAry[0]);
+
+                    if(!m.find()){
+                        System.out.println("商品定義ファイルのフォーマットが不正です");
+                        System.exit(0);
+                    }
                 }
                 System.out.println("商品定義ファイルを読み込みました");
 
