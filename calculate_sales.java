@@ -4,9 +4,10 @@ class calculate_sales{
     public static void main(String args[]){
 
         int i = 0;
+        File file = new File(args[i]);
 
-        while(args[i]!=null){
-            File file = new File(args[i]);
+        do{
+
             try{
                 BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -24,7 +25,8 @@ class calculate_sales{
 
             i++;
 
-        }
+            file = new File(args[i]);
+        }while(file.exists());
 
 
         System.out.println("ダウンロード完了");
