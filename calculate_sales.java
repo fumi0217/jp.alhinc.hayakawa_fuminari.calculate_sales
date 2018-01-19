@@ -50,6 +50,7 @@ class calculate_sales{
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
                     branch.put(strAry[0],strAry[1]);
+                	branchSales.put(strAry[0],0L);
 
                     //adding error messages if the format is unnapropriate
                     String regex = "\\d\\d\\d";
@@ -86,6 +87,7 @@ class calculate_sales{
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
                     commodity.put(strAry[0],strAry[1]);
+                	commoditySales.put(strAry[0], 0L);
 
                     //adding error messages if the format is unnapropriate
                     String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
@@ -101,6 +103,7 @@ class calculate_sales{
                 System.out.println("予期せぬエラーが発生しました。");
             }
         }else{
+        	//if the target file cannot be found in the directory provided, error messages will be shown
             System.out.println("商品定義ファイルが存在しません");
             return;
         }
@@ -178,14 +181,11 @@ class calculate_sales{
         //branchSales<branch code, branch name>
         //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
         for(int i = 0; i < sales.size(); i++){
-            if(branch.containsKey(sales.get(i).get("支店"))){
-                if(branchSales.containsKey(sales.get(i).get("支店"))){
-                    Long newSum = Long.parseLong(sales.get(i).get("売上額").toString()) + branchSales.get(sales.get(i).get("支店").toString());
-                    branchSales.put(sales.get(i).get("支店").toString(), newSum);
-                }else{
-                    branchSales.put(sales.get(i).get("支店").toString(), Long.parseLong(sales.get(i).get("売上額").toString()));
-                }
-            //displaying an error if a branch code in "salesFile" is not registered in "branch"
+        	String branchCode = sales.get(i).get("支店").toString();
+            if(branchSales.containsKey(branchCode)){
+                branchSales.put(branchCode, Long.parseLong(sales.get(i).get("売上額").toString()) + branchSales.get(branchCode));
+            	
+            //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
             }else{
                 System.out.println(salesFile.get(i) + "の支店コードが不正です");
                 return;
@@ -224,15 +224,11 @@ class calculate_sales{
         //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
 
         for(int i = 0; i < sales.size(); i++){
-            if(commodity.containsKey(sales.get(i).get("商品"))){
-                if(commoditySales.containsKey(sales.get(i).get("商品"))){
-                    Long newSum = Long.parseLong(sales.get(i).get("売上額").toString()) +
-                    commoditySales.get(sales.get(i).get("商品").toString());
-                    commoditySales.put(sales.get(i).get("商品").toString(), newSum);
-                }else{
-                    commoditySales.put(sales.get(i).get("商品").toString(),
-                    Long.parseLong(sales.get(i).get("売上額").toString()));
-                }
+        	String commodityCode = sales.get(i).get("商品").toString();
+            if(commoditySales.containsKey(commodityCode)){
+            	commoditySales.put(commodityCode, Long.parseLong(sales.get(i).get("売上額").toString()) +
+                commoditySales.get(commodityCode));
+            		
             //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
             }else{
                 System.out.println(salesFile.get(i) + "の商品コードが不正です");
