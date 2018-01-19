@@ -38,90 +38,79 @@ class calculate_sales{
         //getting files from the command line
         File file = new File(args[0]);
         File[] files = file.listFiles();
+    	File branchFile = new File(args[0]+"\\branch.lst");
+    	File commodityFile = new File(args[0]+"\\commodity.lst");
 
         //loading a file named "branch.lst" and storing its data in a variables named "branch"
-        for(File fNames : files){
-            name = fNames.getName();
-            if(name.equals("branch.lst")){
-                try{
-                    BufferedReader br = new BufferedReader(new FileReader(fNames));
+        if(branchFile.exists()){
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(branchFile));
 
-                    //branch<branch code, branch name>
-                    while((str=br.readLine())!=null){
-                        String[] strAry = str.split(",");
-                        branch.put(strAry[0],strAry[1]);
+                //branch<branch code, branch name>
+                while((str=br.readLine())!=null){
+                    String[] strAry = str.split(",");
+                    branch.put(strAry[0],strAry[1]);
 
-                        //adding error messages if the format is unnapropriate
-                        String regex = "\\d\\d\\d";
-                        if(!strAry[0].matches(regex)){
-                            System.out.println("支店定義ファイルのフォーマットが不正です");
-                            return;
-                        }
+                    //adding error messages if the format is unnapropriate
+                    String regex = "\\d\\d\\d";
+                    if(!strAry[0].matches(regex)){
+                        System.out.println("支店定義ファイルのフォーマットが不正です");
+                        return;
                     }
-
-                    System.out.println("支店定義ファイルを読み込みました");
-
-                    //printing out what is inside branch HashMap
-                    for(Map.Entry<String,String> e : branch.entrySet()){
-                        System.out.println(e.getKey()+":"+e.getValue());
-                    }
-                    br.close();
-                }catch(FileNotFoundException e){
-                    System.out.println("予期せぬエラーが発生しました。");
-                    return;
-                }catch(IOException e){
-                    System.out.println("予期せぬエラーが発生しました。");
-                    return;
                 }
-            }else{
-                counter++;
-                //if the target file cannot be found in the directory provided, error messages will be shown
-                if(counter == files.length){
-                    System.out.println("支店定義ファイルが存在しません");
-                    return;
+
+                System.out.println("支店定義ファイルを読み込みました");
+
+                //printing out what is inside branch HashMap
+                for(Map.Entry<String,String> e : branch.entrySet()){
+                    System.out.println(e.getKey()+":"+e.getValue());
                 }
+                br.close();
+            }catch(FileNotFoundException e){
+                System.out.println("予期せぬエラーが発生しました。");
+                return;
+            }catch(IOException e){
+                System.out.println("予期せぬエラーが発生しました。");
+                return;
             }
+        }else{
+            //if the target file cannot be found in the directory provided, error messages will be shown
+                System.out.println("支店定義ファイルが存在しません");
+                return;
         }
-        counter = 0;
 
         //loading a file named "commodity.lst" and storing its data in a variables named "commodity"
-        for(File fNames : files){
-            name = fNames.getName();
-            if(name.equals("commodity.lst")){
-                try{
-                    BufferedReader br = new BufferedReader(new FileReader(fNames));
+        if(commodityFile.exists()){
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(commodityFile));
 
-                    //commodity<commodity code, commodity name>
-                    while((str=br.readLine())!=null){
-                        String[] strAry = str.split(",");
-                        commodity.put(strAry[0],strAry[1]);
+                //commodity<commodity code, commodity name>
+                while((str=br.readLine())!=null){
+                    String[] strAry = str.split(",");
+                    commodity.put(strAry[0],strAry[1]);
 
-                        //adding error messages if the format is unnapropriate
-                        String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
-                        if(!strAry[0].matches(regex)){
-                            System.out.println("商品定義ファイルのフォーマットが不正です");
-                            return;
-                        }
+                    //adding error messages if the format is unnapropriate
+                    String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
+                    if(!strAry[0].matches(regex)){
+                        System.out.println("商品定義ファイルのフォーマットが不正です");
+                        return;
                     }
-                    System.out.println("商品定義ファイルを読み込みました");
+                }
+                System.out.println("商品定義ファイルを読み込みました");
 
-                    //printing out what is inside commodity HashMap
-                    for(Map.Entry<String,String> e : commodity.entrySet()){
-                        System.out.println(e.getKey()+":"+e.getValue());
-                    }
-                    br.close();
-                }catch(FileNotFoundException e){
-                    System.out.println("予期せぬエラーが発生しました。");
-                }catch(IOException e){
-                    System.out.println(e);
+                //printing out what is inside commodity HashMap
+                for(Map.Entry<String,String> e : commodity.entrySet()){
+                    System.out.println(e.getKey()+":"+e.getValue());
                 }
-            }else{
-                counter++;
-                if(counter == files.length){
-                    System.out.println("予期せぬエラーが発生しました。");
-                    return;
-                }
+                br.close();
+            }catch(FileNotFoundException e){
+                System.out.println("予期せぬエラーが発生しました。");
+            }catch(IOException e){
+                System.out.println("予期せぬエラーが発生しました。");
             }
+        }else{
+            System.out.println("商品定義ファイルが存在しません");
+            return;
         }
         counter = 1;
 
