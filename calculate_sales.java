@@ -27,7 +27,7 @@ class calculate_sales{
         List<File> salesFile = new ArrayList<File>();//for putting sales files in
 
         int fileMin;
-        int counter = 0;
+        int counter = 1;
         int numOfDigits = 8;//number of digits for rcd files
 
         String str = null;
@@ -59,8 +59,6 @@ class calculate_sales{
                     }
                 }
 
-                System.out.println("支店定義ファイルを読み込みました");
-
                 //printing out what is inside branch HashMap
                 for(Map.Entry<String,String> e : branch.entrySet()){
                     System.out.println(e.getKey()+":"+e.getValue());
@@ -75,8 +73,8 @@ class calculate_sales{
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
-                System.out.println("支店定義ファイルが存在しません");
-                return;
+            System.out.println("支店定義ファイルが存在しません");
+            return;
         }
 
         //loading a file named "commodity.lst" and storing its data in a variables named "commodity"
@@ -96,12 +94,6 @@ class calculate_sales{
                         return;
                     }
                 }
-                System.out.println("商品定義ファイルを読み込みました");
-
-                //printing out what is inside commodity HashMap
-                for(Map.Entry<String,String> e : commodity.entrySet()){
-                    System.out.println(e.getKey()+":"+e.getValue());
-                }
                 br.close();
             }catch(FileNotFoundException e){
                 System.out.println("予期せぬエラーが発生しました。");
@@ -112,7 +104,6 @@ class calculate_sales{
             System.out.println("商品定義ファイルが存在しません");
             return;
         }
-        counter = 1;
 
         //storing the number of rcd files in List variables named "fileNum"
         for(File fNames : files){
@@ -134,8 +125,6 @@ class calculate_sales{
                 return;
             }
         }
-
-        System.out.println("売上ファイルが連番になっていることが確認できました");
 
         //storing rcd files in a variable named "salesFile"
         for(int num : fileNum){
@@ -185,11 +174,6 @@ class calculate_sales{
             aSale = new HashMap<String, String>();
             counter = 0;
         }
-
-
-        System.out.println("売り上げデータの中身は、、、");
-        System.out.println(sales);
-        System.out.println(salesFile);
 
         //branchSales<branch code, branch name>
         //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
