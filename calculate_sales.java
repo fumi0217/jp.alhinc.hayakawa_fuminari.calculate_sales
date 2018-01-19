@@ -55,7 +55,7 @@ class calculate_sales{
                         String regex = "\\d\\d\\d";
                         if(!strAry[0].matches(regex)){
                             System.out.println("支店定義ファイルのフォーマットが不正です");
-                            System.exit(0);
+                            return;
                         }
                     }
 
@@ -68,17 +68,17 @@ class calculate_sales{
                     br.close();
                 }catch(FileNotFoundException e){
                     System.out.println("予期せぬエラーが発生しました。");
-                    System.exit(0);
+                    return;
                 }catch(IOException e){
                     System.out.println("予期せぬエラーが発生しました。");
-                    System.exit(0);
+                    return;
                 }
             }else{
                 counter++;
                 //if the target file cannot be found in the directory provided, error messages will be shown
                 if(counter == files.length){
                     System.out.println("支店定義ファイルが存在しません");
-                    System.exit(0);
+                    return;
                 }
             }
         }
@@ -100,7 +100,7 @@ class calculate_sales{
                         String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
                         if(!strAry[0].matches(regex)){
                             System.out.println("商品定義ファイルのフォーマットが不正です");
-                            System.exit(0);
+                            return;
                         }
                     }
                     System.out.println("商品定義ファイルを読み込みました");
@@ -111,15 +111,15 @@ class calculate_sales{
                     }
                     br.close();
                 }catch(FileNotFoundException e){
-                    System.out.println(e);
+                    System.out.println("予期せぬエラーが発生しました。");
                 }catch(IOException e){
                     System.out.println(e);
                 }
             }else{
                 counter++;
                 if(counter == files.length){
-                    System.out.println("商品定義ファイルが存在しません");
-                    System.exit(0);
+                    System.out.println("予期せぬエラーが発生しました。");
+                    return;
                 }
             }
         }
@@ -141,8 +141,8 @@ class calculate_sales{
         for(int i = 1; i < fileNum.size(); i++){
             fileMin++;
             if(fileMin != fileNum.get(i)){
-                System.out.println("売上ファイル番号が連番ではありません");
-                System.exit(0);
+                System.out.println("売上ファイル名が連番になっていません");
+                return;
             }
         }
 
@@ -189,7 +189,7 @@ class calculate_sales{
                 //displaying an error if more than 3 lines in sales file are found
                 if(counter > 3){
                     System.out.println(salesFile.get(i) + "のフォーマットが不正です");
-                    System.exit(0);
+                    return;
                 }
             }
             sales.add(aSale);
@@ -215,7 +215,7 @@ class calculate_sales{
             //displaying an error if a branch code in "salesFile" is not registered in "branch"
             }else{
                 System.out.println(salesFile.get(i) + "の支店コードが不正です");
-                System.exit(0);
+                return;
             }
         }
 
@@ -232,7 +232,7 @@ class calculate_sales{
             Long sum = (Long)entries.getValue();
             if(sum >= 1000000000){
                 System.out.println("合計金額が10桁を超えました");
-                System.exit(0);
+                return;
             }
         }
 
@@ -263,7 +263,7 @@ class calculate_sales{
             //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
             }else{
                 System.out.println(salesFile.get(i) + "の商品コードが不正です");
-                System.exit(0);
+                return;
             }
         }
         System.out.println(commoditySales);
@@ -281,7 +281,7 @@ class calculate_sales{
             Long sum = (Long)entries.getValue();
             if(sum >= 1000000000){
                 System.out.println("合計金額が10桁を超えました");
-                System.exit(0);
+                return;
             }
         }
 
