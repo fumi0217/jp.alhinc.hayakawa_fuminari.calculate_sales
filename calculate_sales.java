@@ -53,9 +53,7 @@ class calculate_sales{
 
                         //adding error messages if the format is unnapropriate
                         String regex = "\\d\\d\\d";
-                        Pattern p = Pattern.compile(regex);
-                        Matcher m = p.matcher(strAry[0]);
-                        if(!m.find()){
+                        if(!strAry[0].matches(regex)){
                             System.out.println("支店定義ファイルのフォーマットが不正です");
                             System.exit(0);
                         }
@@ -100,9 +98,7 @@ class calculate_sales{
 
                         //adding error messages if the format is unnapropriate
                         String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
-                        Pattern p = Pattern.compile(regex);
-                        Matcher m = p.matcher(strAry[0]);
-                        if(!m.find()){
+                        if(!strAry[0].matches(regex)){
                             System.out.println("商品定義ファイルのフォーマットが不正です");
                             System.exit(0);
                         }
