@@ -1,3 +1,5 @@
+package jp.alhinc.hayakawa_fuminari.calculate_sales;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 
-class calculate_sales{
+class calculate{
     public static void main(String args[])throws IOException{
 
         //declearing all the variables that I'm gonna need
@@ -36,10 +38,10 @@ class calculate_sales{
         String[] keys = {"支店", "商品", "売上額"};
 
         //getting files from the command line
-        File file = new File(args[0]);
+        File file = new File("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0]);
         File[] files = file.listFiles();
-    	File branchFile = new File(args[0]+"\\branch.lst");
-    	File commodityFile = new File(args[0]+"\\commodity.lst");
+    	File branchFile = new File("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0]+"\\branch.lst");
+    	File commodityFile = new File("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0]+"\\commodity.lst");
 
         //loading a file named "branch.lst" and storing its data in a variables named "branch"
         if(branchFile.exists()){
@@ -152,7 +154,7 @@ class calculate_sales{
                 complement += '0';
             }
 
-            salesFile.add(new File(new String(args[0] + "/" + complement + num + ".rcd")));
+            salesFile.add(new File(new String("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0] + "/" + complement + num + ".rcd")));
 
             numOfDigits = 8;
             complement = "";
@@ -210,7 +212,7 @@ class calculate_sales{
         }
 
         //creating a new file named "branch.out" for the output(sales for each branch)
-        File outBranch = new File(args[0] + "/" + "branch.out");
+        File outBranch = new File("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0] + "/" + "branch.out");
         outBranch.createNewFile();
         FileWriter branchWriter = new FileWriter(outBranch);
         for(Entry<String, Long> entry : branchEntries){
@@ -256,7 +258,7 @@ class calculate_sales{
 
 
         //sorting a new file named "commodity.out" for the output(sales for each commodity)
-        File outCommodity = new File(args[0] + "/" + "commodity.out");
+        File outCommodity = new File("jp\\alhinc\\hayakawa_fuminari\\calculate_sales\\"+args[0] + "/" + "commodity.out");
         outCommodity.createNewFile();
         FileWriter commodityWriter = new FileWriter(outCommodity);
         for(Entry<String, Long> entry : commodityEntries){
