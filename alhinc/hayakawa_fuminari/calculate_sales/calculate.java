@@ -61,11 +61,6 @@ class calculate{
                         return;
                     }
                 }
-
-                //printing out what is inside branch HashMap
-                for(Map.Entry<String,String> e : branch.entrySet()){
-                    System.out.println(e.getKey()+":"+e.getValue());
-                }
                 br.close();
             }catch(FileNotFoundException e){
                 System.out.println("予期せぬエラーが発生しました。");
@@ -237,7 +232,6 @@ class calculate{
                 return;
             }
         }
-        System.out.println(commoditySales);
 
         //sorting total sales of "commoditySales" into the decending order and renaming it "commodityEntries"
         List<Entry<String, Long>> commodityEntries = new ArrayList<Entry<String, Long>>(commoditySales.entrySet());
