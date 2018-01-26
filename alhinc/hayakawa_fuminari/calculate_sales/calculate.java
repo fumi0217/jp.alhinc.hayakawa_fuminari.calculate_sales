@@ -55,7 +55,7 @@ class calculate{
                 	branchSales.put(strAry[0],0L);
 
                     //adding error messages if the format is unnapropriate
-                    String regex = "\\d\\d\\d";
+                	String regex = "^\\d{3}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("支店定義ファイルのフォーマットが不正です");
                         return;
@@ -87,7 +87,7 @@ class calculate{
                 	commoditySales.put(strAry[0], 0L);
 
                     //adding error messages if the format is unnapropriate
-                    String regex = "[0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z][0-9A-Z]";
+                	String regex = "^\\w{8}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("商品定義ファイルのフォーマットが不正です");
                         return;
@@ -107,8 +107,8 @@ class calculate{
 
         //storing the number of rcd files in List variables named "fileNum"
         for(File fNames : files){
-            name = fNames.getName();
-            if(name.endsWith(".rcd")){
+        	name = fNames.getName();
+        	if(name.matches("^\\d{8}.rcd$")){
                 fileNum.add(Integer.parseInt(name.substring(0, name.length()-4)));
             }
         }
