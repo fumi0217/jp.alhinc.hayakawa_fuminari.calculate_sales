@@ -51,8 +51,6 @@ class Calculate{
                 //branch<branch code, branch name>
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
-                    branch.put(strAry[0],strAry[1]);
-                	branchSales.put(strAry[0],0L);
 
                     //adding error messages if the format is unnapropriate
                 	String regex = "^\\d{3}$";
@@ -60,6 +58,10 @@ class Calculate{
                         System.out.println("支店定義ファイルのフォーマットが不正です");
                         return;
                     }
+
+                    branch.put(strAry[0],strAry[1]);
+                	branchSales.put(strAry[0],0L);
+
                 }
                 br.close();
             }catch(FileNotFoundException e){
@@ -83,8 +85,6 @@ class Calculate{
                 //commodity<commodity code, commodity name>
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
-                    commodity.put(strAry[0],strAry[1]);
-                	commoditySales.put(strAry[0], 0L);
 
                     //adding error messages if the format is unnapropriate
                 	String regex = "^\\w{8}$";
@@ -92,6 +92,11 @@ class Calculate{
                         System.out.println("商品定義ファイルのフォーマットが不正です");
                         return;
                     }
+
+                    commodity.put(strAry[0],strAry[1]);
+                	commoditySales.put(strAry[0], 0L);
+
+
                 }
                 br.close();
             }catch(FileNotFoundException e){
