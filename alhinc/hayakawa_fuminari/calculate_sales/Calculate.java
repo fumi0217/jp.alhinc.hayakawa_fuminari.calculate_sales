@@ -53,6 +53,11 @@ class Calculate{
                     String[] strAry = str.split(",");
 
                     //adding error messages if the format is unnapropriate
+                    if(strAry.length != 2){
+                        System.out.println("支店定義ファイルのフォーマットが不正です");
+                        return;
+                    }
+
                 	String regex = "^\\d{3}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("支店定義ファイルのフォーマットが不正です");
@@ -87,6 +92,11 @@ class Calculate{
                     String[] strAry = str.split(",");
 
                     //adding error messages if the format is unnapropriate
+                    if(strAry.length != 2){
+                        System.out.println("商品定義ファイルのフォーマットが不正です");
+                        return;
+                    }
+
                 	String regex = "^\\w{8}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("商品定義ファイルのフォーマットが不正です");
