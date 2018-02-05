@@ -51,22 +51,15 @@ class Calculate{
                 //branch<branch code, branch name>
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
+                    branch.put(strAry[0],strAry[1]);
+                	branchSales.put(strAry[0],0L);
 
                     //adding error messages if the format is unnapropriate
-                    if(strAry.length != 2){
-                        System.out.println("支店定義ファイルのフォーマットが不正です");
-                        return;
-                    }
-
                 	String regex = "^\\d{3}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("支店定義ファイルのフォーマットが不正です");
                         return;
                     }
-
-                    branch.put(strAry[0],strAry[1]);
-                	branchSales.put(strAry[0],0L);
-
                 }
                 br.close();
             }catch(FileNotFoundException e){
@@ -90,23 +83,15 @@ class Calculate{
                 //commodity<commodity code, commodity name>
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
+                    commodity.put(strAry[0],strAry[1]);
+                	commoditySales.put(strAry[0], 0L);
 
                     //adding error messages if the format is unnapropriate
-                    if(strAry.length != 2){
-                        System.out.println("商品定義ファイルのフォーマットが不正です");
-                        return;
-                    }
-
                 	String regex = "^\\w{8}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("商品定義ファイルのフォーマットが不正です");
                         return;
                     }
-
-                    commodity.put(strAry[0],strAry[1]);
-                	commoditySales.put(strAry[0], 0L);
-
-
                 }
                 br.close();
             }catch(FileNotFoundException e){
@@ -122,8 +107,8 @@ class Calculate{
 
         //storing the number of rcd files in List variables named "fileNum"
         for(File fNames : files){
-        	name = fNames.getName();
-        	if(name.matches("^\\d{8}.rcd$")){
+            name = fNames.getName();
+            if(name.matches("^\\d{8}.rcd$") && fNames.isFile()){
                 fileNum.add(Integer.parseInt(name.substring(0, name.length()-4)));
             }
         }
