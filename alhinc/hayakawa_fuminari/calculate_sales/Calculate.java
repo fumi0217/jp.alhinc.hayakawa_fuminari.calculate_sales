@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 
-class calculate{
+class Calculate{
     public static void main(String args[])throws IOException{
 
         //declearing all the variables that I'm gonna need
