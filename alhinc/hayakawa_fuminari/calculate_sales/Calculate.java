@@ -22,9 +22,6 @@ class Calculate{
         Map<String, Long> branchSales = new HashMap<String, Long>(); //branchSales<branch code, branch's sales sum>
         Map<String, Long> commoditySales = new HashMap<String, Long>(); //commoditySales<commodity code, commodity's sales sum>
 
-        Map<String,String> aSale = new HashMap<String,String>();//aSale<"支店", branch code><"商品", commodity code><"売上額", how much is sold>
-        List<Map> sales = new ArrayList<Map>();//sales<aSale, aSale,,,>
-
         List<Integer> fileNum = new ArrayList<Integer>();//for storing sales files' number in
         List<File> saleFiles = new ArrayList<File>();//for putting sales files in
 
@@ -130,35 +127,56 @@ class Calculate{
         //putting sales data in
         //data structure : sales List<aSale Map[branch code, product code, how much costs in total],,,,,>
         //String[] keys = {"支店", "商品", "売上額"};
-        counter = 0;
-        for(int i = 0;  i < saleFiles.size(); i++){
-             BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
-             while((str = br.readLine()) != null){
-                aSale.put(keys[counter], str);
+
+
+        for(int i = 0; i < saleFiles.size(); i++){
+            BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
+            List<String> rcdContents = new ArrayList<String>();
+            counter = 0;
+            while((str = br.readLine()) != null){
+                rcdContents.add(str);
                 counter++;
+
                 //displaying an error if more than 3 lines in sales file are found
                 if(counter > 3){
                     System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
                     return;
                 }
             }
-            sales.add(aSale);
-            aSale = new HashMap<String, String>();
-            counter = 0;
-        }
 
-        //branchSales<branch code, branch name>
-        //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
-        for(int i = 0; i < sales.size(); i++){
-        	String branchCode = sales.get(i).get("支店").toString();
+            //checking if the variable "rcdContents" has the right values
+            if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$"))){
+                System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
+                return;
+            }
+
+            String branchCode = rcdContents.get(0);
+            String commodityCode = rcdContents.get(1);
+            String sales = rcdContents.get(2);
+
+            //branchSales<branch code, branch name>
+            //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
             if(branchSales.containsKey(branchCode)){
-                branchSales.put(branchCode, Long.parseLong(sales.get(i).get("売上額").toString()) + branchSales.get(branchCode));
+                branchSales.put(branchCode, Long.parseLong(sales) + branchSales.get(branchCode));
 
             //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
             }else{
                 System.out.println(saleFiles.get(i) + "の支店コードが不正です");
                 return;
             }
+
+            //commoditySales<commodity code, commodity name>
+            //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
+            if(commoditySales.containsKey(commodityCode)){
+                commoditySales.put(commodityCode, Long.parseLong(sales) + commoditySales.get(commodityCode));
+
+            //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
+            }else{
+                System.out.println(saleFiles.get(i) + "の商品コードが不正です");
+                return;
+            }
+
+            br.close();
         }
 
         //sorting total sales of "branchSales" into the decending order and renaming it "branchEntries"
@@ -187,23 +205,6 @@ class Calculate{
             branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
         }
         branchWriter.close();
-
-
-        //commoditySales<commodity code, commodity name>
-        //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
-
-        for(int i = 0; i < sales.size(); i++){
-        	String commodityCode = sales.get(i).get("商品").toString();
-            if(commoditySales.containsKey(commodityCode)){
-            	commoditySales.put(commodityCode, Long.parseLong(sales.get(i).get("売上額").toString()) +
-                commoditySales.get(commodityCode));
-
-            //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
-            }else{
-                System.out.println(saleFiles.get(i) + "の商品コードが不正です");
-                return;
-            }
-        }
 
         //sorting total sales of "commoditySales" into the decending order and renaming it "commodityEntries"
         List<Entry<String, Long>> commodityEntries = new ArrayList<Entry<String, Long>>(commoditySales.entrySet());
