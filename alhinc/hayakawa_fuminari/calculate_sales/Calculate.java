@@ -130,53 +130,58 @@ class Calculate{
 
 
         for(int i = 0; i < saleFiles.size(); i++){
-            BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
-            List<String> rcdContents = new ArrayList<String>();
-            counter = 0;
-            while((str = br.readLine()) != null){
-                rcdContents.add(str);
-                counter++;
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
+                List<String> rcdContents = new ArrayList<String>();
+                counter = 0;
+                while((str = br.readLine()) != null){
+                    rcdContents.add(str);
+                    counter++;
 
-                //displaying an error if more than 3 lines in sales file are found
-                if(counter > 3){
+                    //displaying an error if more than 3 lines in sales file are found
+                    if(counter > 3){
+                        System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
+                        return;
+                    }
+                }
+
+                //checking if the variable "rcdContents" has the right values
+                if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$"))){
                     System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
                     return;
                 }
-            }
 
-            //checking if the variable "rcdContents" has the right values
-            if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$"))){
+                String branchCode = rcdContents.get(0);
+                String commodityCode = rcdContents.get(1);
+                String sales = rcdContents.get(2);
+
+                //branchSales<branch code, branch name>
+                //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
+                if(branchSales.containsKey(branchCode)){
+                    branchSales.put(branchCode, Long.parseLong(sales) + branchSales.get(branchCode));
+
+                //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
+                }else{
+                    System.out.println(saleFiles.get(i) + "の支店コードが不正です");
+                    return;
+                }
+
+                //commoditySales<commodity code, commodity name>
+                //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
+                if(commoditySales.containsKey(commodityCode)){
+                    commoditySales.put(commodityCode, Long.parseLong(sales) + commoditySales.get(commodityCode));
+
+                //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
+                }else{
+                    System.out.println(saleFiles.get(i) + "の商品コードが不正です");
+                    return;
+                }
+
+                br.close();
+            }catch(IndexOutOfBoundsException e){
                 System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
                 return;
             }
-
-            String branchCode = rcdContents.get(0);
-            String commodityCode = rcdContents.get(1);
-            String sales = rcdContents.get(2);
-
-            //branchSales<branch code, branch name>
-            //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
-            if(branchSales.containsKey(branchCode)){
-                branchSales.put(branchCode, Long.parseLong(sales) + branchSales.get(branchCode));
-
-            //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
-            }else{
-                System.out.println(saleFiles.get(i) + "の支店コードが不正です");
-                return;
-            }
-
-            //commoditySales<commodity code, commodity name>
-            //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
-            if(commoditySales.containsKey(commodityCode)){
-                commoditySales.put(commodityCode, Long.parseLong(sales) + commoditySales.get(commodityCode));
-
-            //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
-            }else{
-                System.out.println(saleFiles.get(i) + "の商品コードが不正です");
-                return;
-            }
-
-            br.close();
         }
 
         //sorting total sales of "branchSales" into the decending order and renaming it "branchEntries"
