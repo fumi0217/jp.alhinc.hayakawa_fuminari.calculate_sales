@@ -37,8 +37,8 @@ class Calculate{
         //getting files from the command line
         File file = new File(args[0]);
         File[] files = file.listFiles();
-    	File branchFile = new File(args[0], "branch.lst");
-    	File commodityFile = new File(args[0], "commodity.lst");
+        File branchFile = new File(args[0], "branch.lst");
+        File commodityFile = new File(args[0], "commodity.lst");
 
         //loading a file named "branch.lst" and storing its data in a variables named "branch"
         if(branchFile.exists()){
@@ -49,10 +49,10 @@ class Calculate{
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
                     branch.put(strAry[0],strAry[1]);
-                	branchSales.put(strAry[0],0L);
+                    branchSales.put(strAry[0],0L);
 
                     //adding error messages if the format is unnapropriate
-                	String regex = "^\\d{3}$";
+                    String regex = "^\\d{3}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("支店定義ファイルのフォーマットが不正です");
                         return;
@@ -81,10 +81,10 @@ class Calculate{
                 while((str=br.readLine())!=null){
                     String[] strAry = str.split(",");
                     commodity.put(strAry[0],strAry[1]);
-                	commoditySales.put(strAry[0], 0L);
+                    commoditySales.put(strAry[0], 0L);
 
                     //adding error messages if the format is unnapropriate
-                	String regex = "^\\w{8}$";
+                    String regex = "^\\w{8}$";
                     if(!strAry[0].matches(regex)){
                         System.out.println("商品定義ファイルのフォーマットが不正です");
                         return;
@@ -97,7 +97,7 @@ class Calculate{
                 System.out.println("予期せぬエラーが発生しました。");
             }
         }else{
-        	//if the target file cannot be found in the directory provided, error messages will be shown
+            //if the target file cannot be found in the directory provided, error messages will be shown
             System.out.println("商品定義ファイルが存在しません");
             return;
         }
