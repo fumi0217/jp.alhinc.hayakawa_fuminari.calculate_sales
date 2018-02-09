@@ -198,7 +198,6 @@ class Calculate{
 
         //creating a new file named "branch.out" for the output(sales for each branch)
         File outBranch = new File(args[0], "branch.out");
-        outBranch.createNewFile();
         FileWriter branchWriter = new FileWriter(outBranch);
         for(Entry<String, Long> entry : branchEntries){
             String branchCode = entry.getKey();
@@ -226,7 +225,6 @@ class Calculate{
 
         //sorting a new file named "commodity.out" for the output(sales for each commodity)
         File outCommodity = new File(args[0], "commodity.out");
-        outCommodity.createNewFile();
         FileWriter commodityWriter = new FileWriter(outCommodity);
         for(Entry<String, Long> entry : commodityEntries){
             String commodityCode = entry.getKey();
