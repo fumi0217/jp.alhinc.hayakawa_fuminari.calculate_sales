@@ -193,8 +193,8 @@ class Calculate{
         });
 
         //displaying an error if any sum is too large
-        for(Entry entries : branchEntries){
-            Long sum = (Long)entries.getValue();
+        for(Entry<String, Long> entries : branchEntries){
+            Long sum = entries.getValue();
             if(sum >= 1000000000){
                 System.out.println("合計金額が10桁を超えました");
                 return;
@@ -219,8 +219,8 @@ class Calculate{
         });
 
         //displaying an error if any sum is too large
-        for(Entry entries : commodityEntries){
-            Long sum = (Long)entries.getValue();
+        for(Entry<String, Long> entries : commodityEntries){
+            Long sum = entries.getValue();
             if(sum >= 1000000000){
                 System.out.println("合計金額が10桁を超えました");
                 return;
