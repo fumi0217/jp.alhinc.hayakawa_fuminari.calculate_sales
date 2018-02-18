@@ -148,14 +148,14 @@ class Calculate{
 
                     //displaying an error if more than 3 lines in sales file are found
                     if(counter > 3){
-                        System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
+                        System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                         return;
                     }
                 }
 
                 //checking if the variable "rcdContents" has the right values
                 if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$"))){
-                    System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
+                    System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                     return;
                 }
 
@@ -170,7 +170,7 @@ class Calculate{
 
                 //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
                 }else{
-                    System.out.println(saleFiles.get(i) + "の支店コードが不正です");
+                    System.out.println(saleFiles.get(i).getName() + "の支店コードが不正です");
                     return;
                 }
 
@@ -181,13 +181,13 @@ class Calculate{
 
                 //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
                 }else{
-                    System.out.println(saleFiles.get(i) + "の商品コードが不正です");
+                    System.out.println(saleFiles.get(i).getName() + "の商品コードが不正です");
                     return;
                 }
 
                 br.close();
             }catch(IndexOutOfBoundsException e){
-                System.out.println(saleFiles.get(i) + "のフォーマットが不正です");
+                System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                 return;
             }
         }
