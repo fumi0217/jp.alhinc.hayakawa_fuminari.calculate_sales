@@ -34,6 +34,12 @@ class Calculate{
         String complement = "";
         String[] keys = {"支店", "商品", "売上額"};
 
+        //making sure that the number of command-line arguments is one
+        if(args.length != 1){
+            System.out.println("予期せぬエラーが発生しました");
+            return;
+        }
+
         //getting files from the command line
         File file = new File(args[0]);
         File[] files = file.listFiles();
@@ -195,7 +201,7 @@ class Calculate{
         //displaying an error if any sum is too large
         for(Entry<String, Long> entries : branchEntries){
             Long sum = entries.getValue();
-            if(sum >= 10000000000){
+            if(sum >= 9999999999L){
                 System.out.println("合計金額が10桁を超えました");
                 return;
             }
@@ -221,7 +227,7 @@ class Calculate{
         //displaying an error if any sum is too large
         for(Entry<String, Long> entries : commodityEntries){
             Long sum = entries.getValue();
-            if(sum >= 10000000000){
+            if(sum > 9999999999L){
                 System.out.println("合計金額が10桁を超えました");
                 return;
             }
