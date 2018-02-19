@@ -26,7 +26,6 @@ class Calculate{
         List<File> saleFiles = new ArrayList<File>();//for putting sales files in
 
         int fileMin;
-        int counter = 1;
         int numOfDigits = 8;//number of digits for rcd files
 
         String str = null;
@@ -101,8 +100,10 @@ class Calculate{
                 br.close();
             }catch(FileNotFoundException e){
                 System.out.println("予期せぬエラーが発生しました。");
+                return;
             }catch(IOException e){
                 System.out.println("予期せぬエラーが発生しました。");
+                return;
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
@@ -141,20 +142,14 @@ class Calculate{
             try{
                 BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
                 List<String> rcdContents = new ArrayList<String>();
-                counter = 0;
                 while((str = br.readLine()) != null){
                     rcdContents.add(str);
-                    counter++;
-
-                    //displaying an error if more than 3 lines in sales file are found
-                    if(counter > 3){
-                        System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
-                        return;
-                    }
                 }
 
                 //checking if the variable "rcdContents" has the right values
-                if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$"))){
+                if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$")) ||
+                rcdContents.size() != 3 ||
+                rcdContents.get(2).isEmpty()){
                     System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                     return;
                 }
