@@ -46,9 +46,10 @@ class Calculate{
         File commodityFile = new File(args[0], "commodity.lst");
 
         //loading a file named "branch.lst" and storing its data in a variables named "branch"
+        BufferedReader br = null;
         if(branchFile.exists()){
             try{
-                BufferedReader br = new BufferedReader(new FileReader(branchFile));
+                br = new BufferedReader(new FileReader(branchFile));
 
                 //branch<branch code, branch name>
                 while((str=br.readLine())!=null){
@@ -64,13 +65,14 @@ class Calculate{
                     branch.put(strAry[0],strAry[1]);
                     branchSales.put(strAry[0],0L);
                 }
-                br.close();
             }catch(FileNotFoundException e){
                 System.out.println("予期せぬエラーが発生しました。");
                 return;
             }catch(IOException e){
                 System.out.println("予期せぬエラーが発生しました。");
                 return;
+            }finally{
+                br.close();
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
@@ -81,7 +83,7 @@ class Calculate{
         //loading a file named "commodity.lst" and storing its data in a variables named "commodity"
         if(commodityFile.exists()){
             try{
-                BufferedReader br = new BufferedReader(new FileReader(commodityFile));
+                br = new BufferedReader(new FileReader(commodityFile));
 
                 //commodity<commodity code, commodity name>
                 while((str=br.readLine())!=null){
@@ -97,13 +99,14 @@ class Calculate{
                     commodity.put(strAry[0],strAry[1]);
                     commoditySales.put(strAry[0], 0L);
                 }
-                br.close();
             }catch(FileNotFoundException e){
                 System.out.println("予期せぬエラーが発生しました。");
                 return;
             }catch(IOException e){
                 System.out.println("予期せぬエラーが発生しました。");
                 return;
+            }finally{
+                br.close();
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
@@ -140,7 +143,7 @@ class Calculate{
 
         for(int i = 0; i < saleFiles.size(); i++){
             try{
-                BufferedReader br = new BufferedReader(new FileReader(saleFiles.get(i)));
+                br = new BufferedReader(new FileReader(saleFiles.get(i)));
                 List<String> rcdContents = new ArrayList<String>();
                 while((str = br.readLine()) != null){
                     rcdContents.add(str);
@@ -179,11 +182,11 @@ class Calculate{
                     System.out.println(saleFiles.get(i).getName() + "の商品コードが不正です");
                     return;
                 }
-
-                br.close();
             }catch(IndexOutOfBoundsException e){
                 System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                 return;
+            }finally{
+                br.close();
             }
         }
 
@@ -207,11 +210,14 @@ class Calculate{
         //creating a new file named "branch.out" for the output(sales for each branch)
         File outBranch = new File(args[0], "branch.out");
         FileWriter branchWriter = new FileWriter(outBranch);
-        for(Entry<String, Long> entry : branchEntries){
-            String branchCode = entry.getKey();
-            branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
+        try{
+            for(Entry<String, Long> entry : branchEntries){
+                String branchCode = entry.getKey();
+                branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
+            }
+        }finally{
+            branchWriter.close();
         }
-        branchWriter.close();
 
         //sorting total sales of "commoditySales" into the decending order and renaming it "commodityEntries"
         List<Entry<String, Long>> commodityEntries = new ArrayList<Entry<String, Long>>(commoditySales.entrySet());
@@ -234,10 +240,13 @@ class Calculate{
         //sorting a new file named "commodity.out" for the output(sales for each commodity)
         File outCommodity = new File(args[0], "commodity.out");
         FileWriter commodityWriter = new FileWriter(outCommodity);
-        for(Entry<String, Long> entry : commodityEntries){
-            String commodityCode = entry.getKey();
-            commodityWriter.write(commodityCode + "," + commodity.get(commodityCode) + "," + entry.getValue() + "\n");
+        try{
+            for(Entry<String, Long> entry : commodityEntries){
+                String commodityCode = entry.getKey();
+                commodityWriter.write(commodityCode + "," + commodity.get(commodityCode) + "," + entry.getValue() + "\n");
+            }
+        }finally{
+            commodityWriter.close();
         }
-        commodityWriter.close();
     }
 }
