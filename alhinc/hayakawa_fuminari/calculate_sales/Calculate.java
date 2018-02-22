@@ -153,7 +153,7 @@ class Calculate{
                 if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$")) ||
                 rcdContents.size() != 3 ||
                 rcdContents.get(2).isEmpty()){
-                    System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
+                    System.out.println("予期せぬエラーが発生しました");
                     return;
                 }
 
