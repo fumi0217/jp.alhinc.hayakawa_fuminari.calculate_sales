@@ -201,7 +201,7 @@ class Calculate{
         //displaying an error if any sum is too large
         for(Entry<String, Long> entries : branchEntries){
             Long sum = entries.getValue();
-            if(sum >= 9999999999L){
+            if(sum > 9999999999L){
                 System.out.println("合計金額が10桁を超えました");
                 return;
             }
