@@ -164,7 +164,15 @@ class Calculate{
                 //branchSales<branch code, branch name>
                 //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
                 if(branchSales.containsKey(branchCode)){
-                    branchSales.put(branchCode, Long.parseLong(sales) + branchSales.get(branchCode));
+
+                    //displaying an error if sum is too large
+                    Long sum = Long.parseLong(sales) + branchSales.get(branchCode);
+                    if(sum > 9999999999L){
+                        System.out.println("合計金額が10桁を超えました");
+                        return;
+                    }
+
+                    branchSales.put(branchCode, sum);
 
                 //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
                 }else{
@@ -175,7 +183,15 @@ class Calculate{
                 //commoditySales<commodity code, commodity name>
                 //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
                 if(commoditySales.containsKey(commodityCode)){
-                    commoditySales.put(commodityCode, Long.parseLong(sales) + commoditySales.get(commodityCode));
+
+                    //displaying an error if sum is too large
+                    Long sum = Long.parseLong(sales) + commoditySales.get(commodityCode);
+                    if(sum > 9999999999L){
+                        System.out.println("合計金額が10桁を超えました");
+                        return;
+                    }
+
+                    commoditySales.put(commodityCode, sum);
 
                 //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
                 }else{
@@ -198,19 +214,11 @@ class Calculate{
             }
         });
 
-        //displaying an error if any sum is too large
-        for(Entry<String, Long> entries : branchEntries){
-            Long sum = entries.getValue();
-            if(sum > 9999999999L){
-                System.out.println("合計金額が10桁を超えました");
-                return;
-            }
-        }
-
         //creating a new file named "branch.out" for the output(sales for each branch)
         File outBranch = new File(args[0], "branch.out");
-        FileWriter branchWriter = new FileWriter(outBranch);
+        FileWriter branchWriter = null;
         try{
+            branchWriter = new FileWriter(outBranch);
             for(Entry<String, Long> entry : branchEntries){
                 String branchCode = entry.getKey();
                 branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
@@ -227,20 +235,11 @@ class Calculate{
             }
         });
 
-        //displaying an error if any sum is too large
-        for(Entry<String, Long> entries : commodityEntries){
-            Long sum = entries.getValue();
-            if(sum > 9999999999L){
-                System.out.println("合計金額が10桁を超えました");
-                return;
-            }
-        }
-
-
         //sorting a new file named "commodity.out" for the output(sales for each commodity)
         File outCommodity = new File(args[0], "commodity.out");
-        FileWriter commodityWriter = new FileWriter(outCommodity);
+        FileWriter commodityWriter = null;
         try{
+            commodityWriter = new FileWriter(outCommodity);
             for(Entry<String, Long> entry : commodityEntries){
                 String commodityCode = entry.getKey();
                 commodityWriter.write(commodityCode + "," + commodity.get(commodityCode) + "," + entry.getValue() + "\n");
