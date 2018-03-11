@@ -150,9 +150,7 @@ class Calculate{
                 }
 
                 //checking if the variable "rcdContents" has the right values
-                if(!(rcdContents.get(0).matches("^\\d{3}$") && rcdContents.get(1).matches("^\\w{8}$") && rcdContents.get(2).matches("^\\d*$")) ||
-                rcdContents.size() != 3 ||
-                rcdContents.get(2).isEmpty()){
+                if(rcdContents.size() != 3 || !(rcdContents.get(2).matches("\\d{1}*$")){
                     System.out.println("予期せぬエラーが発生しました");
                     return;
                 }
