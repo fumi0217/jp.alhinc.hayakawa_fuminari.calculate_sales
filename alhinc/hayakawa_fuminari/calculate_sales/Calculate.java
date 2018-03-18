@@ -127,10 +127,9 @@ class Calculate{
         Collections.sort(fileNum);
 
         //displaying error messages if the numbers in "fileNum" are not sequential
-        fileMin = fileNum.get(0);
-        for(int i = 1; i < fileNum.size(); i++){
-            fileMin++;
-            if(fileMin != fileNum.get(i)){
+        for(int i = 0; i < fileNum.size()-1; i++){
+            int diff = fileNum.get(i+1) - fileNum.get(i);
+            if(diff != 1){
                 System.out.println("売上ファイル名が連番になっていません");
                 return;
             }
@@ -150,7 +149,7 @@ class Calculate{
                 }
 
                 //checking if the variable "rcdContents" has the right values
-                if(rcdContents.size() != 3 || !(rcdContents.get(2).matches("\\d{1}*$")){
+                if(rcdContents.size() != 3 || !(rcdContents.get(2).matches("\\d*$"))){
                     System.out.println("予期せぬエラーが発生しました");
                     return;
                 }
