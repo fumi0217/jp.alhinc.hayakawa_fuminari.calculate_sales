@@ -66,13 +66,18 @@ class Calculate{
                     branchSales.put(strAry[0],0L);
                 }
             }catch(FileNotFoundException e){
-                System.out.println("予期せぬエラーが発生しました。");
+                System.out.println("予期せぬエラーが発生しました");
                 return;
             }catch(IOException e){
-                System.out.println("予期せぬエラーが発生しました。");
+                System.out.println("予期せぬエラーが発生しました");
                 return;
             }finally{
-                br.close();
+                if(br != null){
+                    br.close();
+                }else{
+                    System.out.println("予期せぬエラーが発生しました");
+                    return;
+                }
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
@@ -100,13 +105,18 @@ class Calculate{
                     commoditySales.put(strAry[0], 0L);
                 }
             }catch(FileNotFoundException e){
-                System.out.println("予期せぬエラーが発生しました。");
+                System.out.println("予期せぬエラーが発生しました");
                 return;
             }catch(IOException e){
-                System.out.println("予期せぬエラーが発生しました。");
+                System.out.println("予期せぬエラーが発生しました");
                 return;
             }finally{
-                br.close();
+                if(br != null){
+                    br.close();
+                }else{
+                    System.out.println("予期せぬエラーが発生しました");
+                    return;
+                }
             }
         }else{
             //if the target file cannot be found in the directory provided, error messages will be shown
@@ -199,7 +209,12 @@ class Calculate{
                 System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                 return;
             }finally{
-                br.close();
+                if(br != null){
+                    br.close();
+                }else{
+                    System.out.println("予期せぬエラーが発生しました");
+                    return;
+                }
             }
         }
 
@@ -221,7 +236,12 @@ class Calculate{
                 branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
             }
         }finally{
-            branchWriter.close();
+            if(branchWriter != null){
+                branchWriter.close();
+            }else{
+                System.out.println("予期せぬエラーが発生しました");
+                return;
+            }
         }
 
         //sorting total sales of "commoditySales" into the decending order and renaming it "commodityEntries"
@@ -242,7 +262,12 @@ class Calculate{
                 commodityWriter.write(commodityCode + "," + commodity.get(commodityCode) + "," + entry.getValue() + "\n");
             }
         }finally{
-            commodityWriter.close();
+            if(commodityWriter != null){
+                commodityWriter.close();
+            }else{
+                System.out.println("予期せぬエラーが発生しました");
+                return;
+            }
         }
     }
 }
