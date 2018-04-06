@@ -1,19 +1,83 @@
 package jp.alhinc.hayakawa_fuminari.calculate_sales;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Collections;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 class Calculate{
+
+
+	public static Boolean downloadingData(String format, String fileName, String path, Map<String,String> definitionMap, Map<String,Long> salesMap) throws IOException{
+		File definitionFile = new File(path,fileName);
+		String str;
+		if(!definitionFile.exists()){
+			//if the target file cannot be found in the directory provided, error messages will be shown
+	        System.out.println(fileName + "が存在しません");
+	        return false;
+		}
+		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(definitionFile));
+
+            while((str=br.readLine())!=null){
+                String[] fileContents = str.split(",");
+
+                //adding error messages if the format is unnapropriate
+                if(fileContents.length != 2 || !fileContents[0].matches(format)){
+                    System.out.println(fileName + "のフォーマットが不正です");
+        	        return false;
+                }
+
+                definitionMap.put(fileContents[0],fileContents[1]);
+                salesMap.put(fileContents[0],0L);
+            }
+        }catch(IOException e){
+            System.out.println("予期せぬエラーが発生しました");
+	        return false;
+        }finally{
+            if(br != null){
+                br.close();
+            }else{
+                System.out.println("予期せぬエラーが発生しました");
+    	        return false;
+            }
+        }
+		return true;
+
+    }
+
+	public static Boolean writingOutputs(String fileName,String path,Map definitionMap, List<Entry<String,Long>> totalSales) throws IOException{
+		File resultFile = new File(path, fileName);
+		BufferedWriter bWriter = null;
+		try{
+			bWriter = new BufferedWriter(new FileWriter(resultFile));
+            for(Entry<String, Long> entry : totalSales){
+                String Code = entry.getKey();
+                bWriter.write(Code + "," + definitionMap.get(Code) + "," + entry.getValue());
+                bWriter.newLine();
+            }
+        }finally{
+            if(bWriter != null){
+                bWriter.close();
+            }else{
+                System.out.println("予期せぬエラーが発生しました");
+    	        return false;
+            }
+        }
+		return true;
+	}
+
     public static void main(String args[])throws IOException{
 
         //declearing all the variables that I'm gonna need
@@ -21,17 +85,9 @@ class Calculate{
         Map<String,String> commodity = new HashMap<String,String>();//commodity<commodity code, commodity name>
         Map<String, Long> branchSales = new HashMap<String, Long>(); //branchSales<branch code, branch's sales sum>
         Map<String, Long> commoditySales = new HashMap<String, Long>(); //commoditySales<commodity code, commodity's sales sum>
-
         List<Integer> fileNum = new ArrayList<Integer>();//for storing sales files' number in
         List<File> saleFiles = new ArrayList<File>();//for putting sales files in
-
-        int fileMin;
-        int numOfDigits = 8;//number of digits for rcd files
-
         String str = null;
-        String name;
-        String complement = "";
-        String[] keys = {"支店", "商品", "売上額"};
 
         //making sure that the number of command-line arguments is one
         if(args.length != 1){
@@ -42,86 +98,21 @@ class Calculate{
         //getting files from the command line
         File file = new File(args[0]);
         File[] files = file.listFiles();
-        File branchFile = new File(args[0], "branch.lst");
-        File commodityFile = new File(args[0], "commodity.lst");
+        String branchRegex = "^\\d{3}$";
+        String commodityRegex = "^\\w{8}$";
+        String branchInput = "branch.lst";
+        String commodityInput = "commodity.lst";
+        String branchOutput = "branch.out";
+        String commodityOutput = "commodity.out";
+        String path = args[0];
 
         //loading a file named "branch.lst" and storing its data in a variables named "branch"
-        BufferedReader br = null;
-        if(branchFile.exists()){
-            try{
-                br = new BufferedReader(new FileReader(branchFile));
-
-                //branch<branch code, branch name>
-                while((str=br.readLine())!=null){
-                    String[] strAry = str.split(",");
-
-                    //adding error messages if the format is unnapropriate
-                    String regex = "^\\d{3}$";
-                    if(!strAry[0].matches(regex) || strAry.length != 2){
-                        System.out.println("支店定義ファイルのフォーマットが不正です");
-                        return;
-                    }
-
-                    branch.put(strAry[0],strAry[1]);
-                    branchSales.put(strAry[0],0L);
-                }
-            }catch(FileNotFoundException e){
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }catch(IOException e){
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }finally{
-                if(br != null){
-                    br.close();
-                }else{
-                    System.out.println("予期せぬエラーが発生しました");
-                    return;
-                }
-            }
-        }else{
-            //if the target file cannot be found in the directory provided, error messages will be shown
-            System.out.println("支店定義ファイルが存在しません");
-            return;
+        if(!downloadingData(branchRegex,branchInput,path,branch,branchSales)){
+        	return;
         }
-
         //loading a file named "commodity.lst" and storing its data in a variables named "commodity"
-        if(commodityFile.exists()){
-            try{
-                br = new BufferedReader(new FileReader(commodityFile));
-
-                //commodity<commodity code, commodity name>
-                while((str=br.readLine())!=null){
-                    String[] strAry = str.split(",");
-
-                    //adding error messages if the format is unnapropriate
-                    String regex = "^\\w{8}$";
-                    if(!strAry[0].matches(regex) || strAry.length != 2){
-                        System.out.println("商品定義ファイルのフォーマットが不正です");
-                        return;
-                    }
-
-                    commodity.put(strAry[0],strAry[1]);
-                    commoditySales.put(strAry[0], 0L);
-                }
-            }catch(FileNotFoundException e){
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }catch(IOException e){
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }finally{
-                if(br != null){
-                    br.close();
-                }else{
-                    System.out.println("予期せぬエラーが発生しました");
-                    return;
-                }
-            }
-        }else{
-            //if the target file cannot be found in the directory provided, error messages will be shown
-            System.out.println("商品定義ファイルが存在しません");
-            return;
+        if(!downloadingData(commodityRegex,commodityInput,path,commodity,commoditySales)){
+        	return;
         }
 
         //storing rcd files in a variable named "salesFile"
@@ -133,10 +124,23 @@ class Calculate{
             }
         }
 
-        //sorting "fileNum" into the decending order
-        Collections.sort(fileNum);
+        if(fileNum.size()!=0){
+        	//sorting "fileNum" into the accending order
+            Collections.sort(fileNum);
+            int min = fileNum.get(0);
+            int max = fileNum.get(fileNum.size()-1);
 
-        //displaying error messages if the numbers in "fileNum" are not sequential
+            //displaying error messages if the numbers in "fileNum" are not sequential
+            if(max-min+1!=fileNum.size()){
+            	System.out.println("売上ファイル名が連番になっていません");
+            	return;
+            }
+        }
+
+
+
+
+
         for(int i = 0; i < fileNum.size()-1; i++){
             int diff = fileNum.get(i+1) - fileNum.get(i);
             if(diff != 1){
@@ -149,6 +153,7 @@ class Calculate{
         //data structure : sales List<aSale Map[branch code, product code, how much costs in total],,,,,>
         //String[] keys = {"支店", "商品", "売上額"};
 
+        BufferedReader br = null;
 
         for(int i = 0; i < saleFiles.size(); i++){
             try{
@@ -168,43 +173,34 @@ class Calculate{
                 String commodityCode = rcdContents.get(1);
                 String sales = rcdContents.get(2);
 
-                //branchSales<branch code, branch name>
-                //differentiating sales data according to which branch it is, and storing it in a variables named "branchSales"
-                if(branchSales.containsKey(branchCode)){
-
-                    //displaying an error if sum is too large
-                    Long sum = Long.parseLong(sales) + branchSales.get(branchCode);
-                    if(sum > 9999999999L){
-                        System.out.println("合計金額が10桁を超えました");
-                        return;
-                    }
-
-                    branchSales.put(branchCode, sum);
-
                 //displaying an error if a branch code in "salesFile" is not registered in "branchSales"
-                }else{
-                    System.out.println(saleFiles.get(i).getName() + "の支店コードが不正です");
+                if(!branchSales.containsKey(branchCode)){
+                	System.out.println(saleFiles.get(i).getName() + "の支店コードが不正です");
                     return;
                 }
 
-                //commoditySales<commodity code, commodity name>
-                //differentiating sales data according to which commodity it is, and storing it in a variables named "commoditySales"
-                if(commoditySales.containsKey(commodityCode)){
+                Long sum = Long.parseLong(sales) + branchSales.get(branchCode);
 
-                    //displaying an error if sum is too large
-                    Long sum = Long.parseLong(sales) + commoditySales.get(commodityCode);
-                    if(sum > 9999999999L){
-                        System.out.println("合計金額が10桁を超えました");
-                        return;
-                    }
-
-                    commoditySales.put(commodityCode, sum);
-
-                //displaying an error if a commodity code in "salesFile" is not registered in "commodity"
-                }else{
-                    System.out.println(saleFiles.get(i).getName() + "の商品コードが不正です");
+                if(sum > 9999999999L){
+                    System.out.println("合計金額が10桁を超えました");
                     return;
                 }
+
+                branchSales.put(branchCode, sum);
+
+                if(!commoditySales.containsKey(commodityCode)){
+                	System.out.println(saleFiles.get(i).getName() + "の商品コードが不正です");
+                    return;
+                }
+
+                sum = Long.parseLong(sales) + commoditySales.get(commodityCode);
+
+                if(sum > 9999999999L){
+                    System.out.println("合計金額が10桁を超えました");
+                    return;
+                }
+
+                commoditySales.put(commodityCode, sum);
             }catch(IndexOutOfBoundsException e){
                 System.out.println(saleFiles.get(i).getName() + "のフォーマットが不正です");
                 return;
@@ -227,21 +223,8 @@ class Calculate{
         });
 
         //creating a new file named "branch.out" for the output(sales for each branch)
-        File outBranch = new File(args[0], "branch.out");
-        FileWriter branchWriter = null;
-        try{
-            branchWriter = new FileWriter(outBranch);
-            for(Entry<String, Long> entry : branchEntries){
-                String branchCode = entry.getKey();
-                branchWriter.write(branchCode + "," + branch.get(branchCode) + "," + entry.getValue() + "\n");
-            }
-        }finally{
-            if(branchWriter != null){
-                branchWriter.close();
-            }else{
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }
+        if(!writingOutputs(branchOutput,path,branch,branchEntries)){
+        	return;
         }
 
         //sorting total sales of "commoditySales" into the decending order and renaming it "commodityEntries"
@@ -252,22 +235,10 @@ class Calculate{
             }
         });
 
-        //sorting a new file named "commodity.out" for the output(sales for each commodity)
-        File outCommodity = new File(args[0], "commodity.out");
-        FileWriter commodityWriter = null;
-        try{
-            commodityWriter = new FileWriter(outCommodity);
-            for(Entry<String, Long> entry : commodityEntries){
-                String commodityCode = entry.getKey();
-                commodityWriter.write(commodityCode + "," + commodity.get(commodityCode) + "," + entry.getValue() + "\n");
-            }
-        }finally{
-            if(commodityWriter != null){
-                commodityWriter.close();
-            }else{
-                System.out.println("予期せぬエラーが発生しました");
-                return;
-            }
+        //creating a new file named "commodity.out" for the output(sales for each commodity)
+        if(!writingOutputs(commodityOutput,path,commodity,commodityEntries)){
+        	return;
         }
+
     }
 }
